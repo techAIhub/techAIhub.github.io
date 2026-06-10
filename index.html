@@ -3,22 +3,121 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TechAI Hub</title>
+  <title>TechAI Hub - AI & Tech Blog</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
-      background: #0f0f0f;
+      background: #0a0a0a;
       color: white;
-      text-align: center;
-      padding: 50px;
     }
-    h1 { color: #00d4ff; font-size: 2.5em; }
-    p { font-size: 1.2em; color: #aaa; }
+    nav {
+      background: #111;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav h1 { color: #00d4ff; font-size: 1.5em; }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+    .hero {
+      text-align: center;
+      padding: 80px 20px;
+      background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+    }
+    .hero h2 {
+      font-size: 2.5em;
+      color: #00d4ff;
+      margin-bottom: 15px;
+    }
+    .hero p {
+      font-size: 1.2em;
+      color: #aaa;
+      margin-bottom: 30px;
+    }
+    .btn {
+      background: #00d4ff;
+      color: black;
+      padding: 12px 30px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .section {
+      padding: 50px 20px;
+      text-align: center;
+    }
+    .section h3 {
+      color: #00d4ff;
+      font-size: 1.8em;
+      margin-bottom: 30px;
+    }
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 10px;
+      padding: 25px;
+      width: 250px;
+    }
+    .card h4 { color: #00d4ff; margin-bottom: 10px; }
+    .card p { color: #aaa; font-size: 0.9em; }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #111;
+      color: #aaa;
+    }
   </style>
 </head>
 <body>
-  <h1>Welcome to TechAI Hub</h1>
-  <p>Your #1 source for AI & Tech</p>
-  <p>🚀 Coming Soon — Stay Tuned!</p>
+
+  <nav>
+    <h1>⚡ TechAI Hub</h1>
+    <div>
+      <a href="#">Home</a>
+      <a href="#">Blog</a>
+      <a href="#">Tools</a>
+      <a href="#">About</a>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <h2>Your #1 Source for AI & Tech</h2>
+    <p>Latest AI tools, tutorials, and tech news for students</p>
+    <a href="#" class="btn">Explore Articles →</a>
+  </div>
+
+  <div class="section">
+    <h3>🔥 Latest Topics</h3>
+    <div class="cards">
+      <div class="card">
+        <h4>🤖 AI Tools</h4>
+        <p>Best AI tools to boost your productivity and learning</p>
+      </div>
+      <div class="card">
+        <h4>💻 Tech News</h4>
+        <p>Latest happenings in the world of technology</p>
+      </div>
+      <div class="card">
+        <h4>🎓 For Students</h4>
+        <p>Guides, resources and tips for tech students</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 TechAI Hub — Built with ❤️ by techAIhub</p>
+  </footer>
+
 </body>
 </html>
