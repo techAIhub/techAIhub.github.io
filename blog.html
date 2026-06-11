@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — TechAI Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .post-view { display:none; max-width:740px; margin:0 auto; padding:40px 5%; }
+    .post-view.active { display:block; }
+    .blog-view { display:block; }
+    .blog-view.hidden { display:none; }
+    .back-btn { display:inline-flex; align-items:center; gap:6px; background:none; border:none; color:var(--muted); font-size:0.875rem; font-weight:500; cursor:pointer; margin-bottom:28px; padding:0; font-family:'Inter',sans-serif; }
+    .back-btn:hover { color:var(--accent); }
+    .post-tag { display:inline-block; background:var(--accent-light); color:var(--accent); font-size:0.78rem; font-weight:600; padding:4px 12px; border-radius:20px; margin-bottom:16px; }
+    .post-title { font-family:'Space Grotesk',sans-serif; font-size:clamp(1.6rem,4vw,2.4rem); font-weight:700; letter-spacing:-0.5px; line-height:1.2; margin-bottom:16px; }
+    .post-meta { color:var(--muted); font-size:0.85rem; margin-bottom:32px; padding-bottom:24px; border-bottom:1px solid var(--border); }
+    .post-body p { color:#333; line-height:1.85; margin-bottom:16px; font-size:0.95rem; }
+    .post-body h2 { font-family:'Space Grotesk',sans-serif; font-size:1.3rem; font-weight:700; margin:28px 0 10px; }
+    .post-body h3 { font-size:1.05rem; font-weight:600; margin:20px 0 8px; }
+    .post-body ul, .post-body ol { padding-left:20px; margin-bottom:16px; }
+    .post-body li { line-height:1.8; font-size:0.95rem; color:#333; margin-bottom:4px; }
+    .post-body strong { font-weight:600; color:#111; }
+    .tip-box { background:var(--accent-light); border-left:3px solid var(--accent); padding:14px 18px; border-radius:0 8px 8px 0; margin:20px 0; }
+    .tip-box p { color:var(--accent) !important; margin:0 !important; font-size:0.9rem; }
+    .filter-bar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:28px; }
+    .filter-btn { padding:6px 16px; border-radius:20px; border:1.5px solid var(--border); background:white; color:var(--muted); font-size:0.82rem; font-weight:500; cursor:pointer; transition:all 0.2s; }
+    .filter-btn.active, .filter-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-light); }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="logo">TechAI<span>Hub</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="blog.html" class="active">Blog</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- BLOG LIST VIEW -->
+<div class="blog-view" id="blogView">
+  <div class="container" style="padding:50px 5%">
+    <div class="sec-label">All Posts</div>
+    <div class="sec-title">The Blog</div>
+    <p class="sec-sub">Everything about AI, Tech, and Student Life</p>
+    <div class="filter-bar" id="filterBar"></div>
+    <div class="blog-grid" id="blogGrid"></div>
+    <div id="blogEmpty" class="empty-cards" style="display:none"><p>No posts yet. Check back soon!</p></div>
+  </div>
+</div>
+
+<!-- SINGLE POST VIEW -->
+<div class="post-view" id="postView">
+  <button class="back-btn" onclick="closePost()">← Back to Blog</button>
+  <div id="postContent"></div>
+</div>
+
+<footer class="footer">
+  <p>© 2025 TechAI Hub. Built with ❤️</p>
+  <p><a href="blog.html">Blog</a> · <a href="about.html">About</a> · <a href="contact.html">Contact</a></p>
+</footer>
+
+<script src="_nav.js"></script>
+<script>
+  let activeFilter = 'All';
+
+  function renderBlog(filter) {
+    const posts = getPosts();
+    const categories = ['All', ...new Set(posts.map(p => p.category))];
+    document.getElementById('filterBar').innerHTML = categories.map(c =>
+      `<button class="filter-btn ${c===filter?'active':''}" onclick="renderBlog('${c}')">${c}</button>`
+    ).join('');
+    const filtered = filter === 'All' ? posts : posts.filter(p => p.category === filter);
+    const grid = document.getElementById('blogGrid');
+    const empty = document.getElementById('blogEmpty');
+    activeFilter = filter;
+    if (filtered.length === 0) {
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+      grid.innerHTML = [...filtered].reverse().map(p => `
+        <a href="blog.html?id=${p.id}" class="blog-card" onclick="openPost(event,${p.id})">
+          <span class="blog-tag">${p.category}</span>
+          <h3>${p.title}</h3>
+          <p>${p.desc}</p>
+          <div class="blog-meta">${p.date} · ${p.readTime}</div>
+          <div class="read-more">Read article →</div>
+        </a>`).join('');
+    }
+  }
+
+  function openPost(e, id) {
+    e && e.preventDefault();
+    const post = getPosts().find(p => p.id === id);
+    if (!post) return;
+    document.getElementById('blogView').classList.add('hidden');
+    const pv = document.getElementById('postView');
+    pv.classList.add('active');
+    document.getElementById('postContent').innerHTML = `
+      <span class="post-tag">${post.category}</span>
+      <h1 class="post-title">${post.title}</h1>
+      <div class="post-meta">${post.date} · ${post.readTime}</div>
+      <div class="post-body">${formatContent(post.content)}</div>`;
+    window.scrollTo(0, 0);
+    history.pushState({}, '', `blog.html?id=${id}`);
+  }
+
+  function closePost() {
+    document.getElementById('postView').classList.remove('active');
+    document.getElementById('blogView').classList.remove('hidden');
+    history.pushState({}, '', 'blog.html');
+    window.scrollTo(0, 0);
+  }
+
+  function formatContent(text) {
+    return text
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>\n?)+/g, m => `<ul>${m}</ul>`)
+      .replace(/💡 (.+)/g, '<div class="tip-box"><p>💡 $1</p></div>')
+      .split('\n\n').map(p => p.startsWith('<') ? p : `<p>${p}</p>`).join('');
+  }
+
+  // Check URL param
+  const urlId = new URLSearchParams(location.search).get('id');
+  if (urlId) openPost(null, parseInt(urlId));
+  renderBlog('All');
+</script>
+</body>
+</html>
