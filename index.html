@@ -1,73 +1,851 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TechAI Hub — AI & Tech for Students</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechAI Hub — AI & Tech for Students</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fafafa;--sur:#fff;--bdr:#e8e8e8;--txt:#111;--mut:#666;--acc:#2563eb;--acl:#eff6ff;--tag:#f1f5f9;--red:#ef4444;--grn:#22c55e;--sb:#1e293b;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);line-height:1.6;}
+
+/* ===== NAVBAR ===== */
+.navbar{position:sticky;top:0;background:rgba(250,250,250,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--bdr);z-index:200;padding:0 5%;display:flex;justify-content:space-between;align-items:center;height:62px;}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:var(--txt);text-decoration:none;cursor:pointer;}
+.logo span{color:var(--acc);}
+.nav-links{display:flex;gap:6px;align-items:center;list-style:none;}
+.nav-links a{color:var(--mut);text-decoration:none;font-size:0.875rem;font-weight:500;padding:6px 10px;border-radius:6px;transition:all 0.2s;cursor:pointer;}
+.nav-links a:hover,.nav-links a.active{color:var(--txt);background:var(--tag);}
+.btn-admin-login{background:var(--sb)!important;color:white!important;padding:7px 14px!important;border-radius:7px!important;font-size:0.82rem!important;font-weight:600!important;}
+.btn-admin-login:hover{background:#334155!important;}
+.btn-logout{background:#fef2f2!important;color:var(--red)!important;border:1px solid #fecaca!important;padding:7px 14px!important;border-radius:7px!important;font-size:0.82rem!important;}
+.admin-indicator{display:flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;padding:5px 12px;border-radius:20px;font-size:0.78rem;font-weight:600;}
+
+/* ===== PAGES ===== */
+.page{display:none;min-height:80vh;}
+.page.active{display:block;}
+
+/* ===== HERO ===== */
+.hero{padding:80px 5% 70px;max-width:780px;margin:0 auto;}
+.hero-tag{display:inline-block;background:var(--acl);color:var(--acc);font-size:0.78rem;font-weight:600;padding:4px 14px;border-radius:20px;margin-bottom:18px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:700;line-height:1.15;letter-spacing:-1px;margin-bottom:16px;}
+.hero h1 em{font-style:normal;color:var(--acc);}
+.hero p{font-size:1.05rem;color:var(--mut);max-width:520px;margin-bottom:28px;line-height:1.7;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.hero-stats{display:flex;gap:36px;margin-top:44px;padding-top:28px;border-top:1px solid var(--bdr);flex-wrap:wrap;}
+.stat-num{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:700;}
+.stat-lbl{font-size:0.8rem;color:var(--mut);}
+
+/* ===== BUTTONS ===== */
+.btn-p{background:var(--acc);color:white;padding:11px 24px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;display:inline-block;transition:background 0.2s;}
+.btn-p:hover{background:#1d4ed8;}
+.btn-s{background:var(--sur);color:var(--txt);padding:11px 24px;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:500;border:1px solid var(--bdr);cursor:pointer;font-family:'Inter',sans-serif;display:inline-block;transition:border-color 0.2s;}
+.btn-s:hover{border-color:#999;}
+.btn-sm{padding:6px 13px;font-size:0.78rem;font-weight:600;border-radius:6px;cursor:pointer;border:none;font-family:'Inter',sans-serif;}
+.b-blue{background:var(--acc);color:white;}
+.b-blue:hover{background:#1d4ed8;}
+.b-out{background:white;color:var(--txt);border:1.5px solid var(--bdr);}
+.b-out:hover{border-color:var(--acc);color:var(--acc);}
+.b-red{background:#fef2f2;color:var(--red);border:1px solid #fecaca;}
+.b-red:hover{background:var(--red);color:white;}
+.b-grn{background:#f0fdf4;color:var(--grn);border:1px solid #bbf7d0;}
+
+/* ===== SECTION ===== */
+.section{padding:64px 5%;}
+.sur-sec{background:var(--sur);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);}
+.con{max-width:1100px;margin:0 auto;}
+.s-label{font-size:0.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--acc);margin-bottom:8px;}
+.s-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;}
+.s-sub{color:var(--mut);font-size:0.93rem;margin-bottom:34px;}
+
+/* ===== BLOG GRID ===== */
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;}
+.blog-card{background:var(--bg);border:1px solid var(--bdr);border-radius:10px;padding:22px;text-decoration:none;color:var(--txt);display:block;transition:border-color 0.2s,transform 0.2s;cursor:pointer;position:relative;}
+.blog-card:hover{border-color:var(--acc);transform:translateY(-2px);}
+.blog-tag{display:inline-block;background:var(--tag);color:var(--mut);font-size:0.7rem;font-weight:700;padding:3px 9px;border-radius:4px;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;}
+.blog-card h3{font-size:0.97rem;font-weight:600;line-height:1.4;margin-bottom:8px;}
+.blog-card p{font-size:0.85rem;color:var(--mut);line-height:1.6;}
+.blog-meta{font-size:0.75rem;color:var(--mut);margin-top:12px;}
+.read-more{color:var(--acc);font-size:0.8rem;font-weight:600;margin-top:10px;display:inline-block;}
+.admin-card-actions{position:absolute;top:10px;right:10px;display:flex;gap:5px;}
+.empty-msg{text-align:center;padding:48px;color:var(--mut);font-size:0.93rem;}
+
+/* ===== SINGLE POST ===== */
+.post-wrap{max-width:740px;margin:0 auto;padding:48px 5%;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--mut);font-size:0.85rem;font-weight:500;cursor:pointer;margin-bottom:28px;font-family:'Inter',sans-serif;padding:0;}
+.back-btn:hover{color:var(--acc);}
+.post-tag{display:inline-block;background:var(--acl);color:var(--acc);font-size:0.78rem;font-weight:600;padding:4px 12px;border-radius:20px;margin-bottom:14px;}
+.post-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.6rem,4vw,2.3rem);font-weight:700;letter-spacing:-0.5px;line-height:1.2;margin-bottom:14px;}
+.post-meta{color:var(--mut);font-size:0.83rem;padding-bottom:22px;border-bottom:1px solid var(--bdr);margin-bottom:28px;}
+.post-body p{color:#333;line-height:1.85;margin-bottom:16px;font-size:0.95rem;}
+.post-body h2{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin:28px 0 10px;}
+.post-body h3{font-size:1.05rem;font-weight:600;margin:20px 0 8px;}
+.post-body ul,.post-body ol{padding-left:22px;margin-bottom:16px;}
+.post-body li{line-height:1.8;font-size:0.95rem;color:#333;margin-bottom:4px;}
+.post-body strong{font-weight:600;color:#111;}
+.tip-box{background:var(--acl);border-left:3px solid var(--acc);padding:14px 18px;border-radius:0 8px 8px 0;margin:20px 0;}
+.tip-box p{color:var(--acc)!important;margin:0!important;font-size:0.9rem;}
+
+/* ===== ABOUT ===== */
+.about-wrap{max-width:900px;margin:0 auto;padding:60px 5%;}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start;}
+.about-h{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:700;letter-spacing:-0.5px;margin-bottom:14px;line-height:1.2;}
+.about-bio{color:var(--mut);font-size:0.95rem;line-height:1.8;margin-bottom:14px;}
+.skills-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
+.skill-tag{background:var(--acl);color:var(--acc);font-size:0.8rem;font-weight:500;padding:5px 13px;border-radius:6px;}
+.tl-card{background:white;border:1px solid var(--bdr);border-radius:12px;padding:28px;}
+.tl-card h3{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:18px;}
+.tl-item{display:flex;gap:12px;margin-bottom:15px;}
+.tl-dot{width:8px;height:8px;border-radius:50%;background:var(--acc);margin-top:6px;flex-shrink:0;}
+.tl-title{font-size:0.9rem;font-weight:600;}
+.tl-sub{font-size:0.78rem;color:var(--mut);}
+
+/* ===== CONTACT ===== */
+.contact-wrap{max-width:560px;margin:0 auto;padding:60px 5%;}
+.fg{margin-bottom:16px;}
+.fg label{display:block;font-size:0.78rem;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+.fg input,.fg textarea,.fg select{width:100%;padding:11px 14px;border:1.5px solid var(--bdr);border-radius:8px;font-size:0.875rem;font-family:'Inter',sans-serif;background:white;outline:none;transition:border-color 0.2s;}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--acc);}
+.fg textarea{resize:vertical;min-height:120px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.soc-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:28px;}
+.soc-btn{display:flex;align-items:center;gap:7px;color:var(--mut);text-decoration:none;font-size:0.83rem;font-weight:500;padding:8px 14px;border:1px solid var(--bdr);border-radius:7px;transition:all 0.2s;}
+.soc-btn:hover{border-color:var(--acc);color:var(--acc);}
+.success-box{background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d;padding:14px;border-radius:8px;text-align:center;font-weight:500;display:none;margin-top:12px;font-size:0.875rem;}
+
+/* ===== ADMIN PANEL ===== */
+.admin-bar{background:var(--sb);color:white;padding:10px 5%;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.admin-bar span{font-size:0.82rem;font-weight:500;opacity:0.8;}
+.admin-bar-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.95rem;}
+.admin-bar-spacer{flex:1;}
+
+.admin-section{background:#f8fafc;border:2px dashed #cbd5e1;border-radius:12px;padding:24px;margin:20px 0;}
+.admin-section-title{font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--acc);margin-bottom:14px;}
+
+/* ===== ADMIN DASHBOARD ===== */
+.dash-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-bottom:24px;}
+.dstat{background:white;border:1px solid var(--bdr);border-radius:10px;padding:20px;}
+.dstat-icon{font-size:1.4rem;margin-bottom:8px;}
+.dstat-label{font-size:0.72rem;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+.dstat-num{font-family:'Space Grotesk',sans-serif;font-size:1.7rem;font-weight:700;}
+.c-blue{color:var(--acc);}.c-green{color:var(--grn);}.c-orange{color:#f59e0b;}
+
+.card{background:white;border:1px solid var(--bdr);border-radius:10px;padding:22px;margin-bottom:20px;}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+.card-title{font-weight:700;font-size:0.95rem;}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:9px 12px;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--mut);border-bottom:1px solid var(--bdr);}
+td{padding:12px;font-size:0.85rem;border-bottom:1px solid var(--bdr);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#f8fafc;}
+
+/* MESSAGES */
+.msg-card{background:white;border:1px solid var(--bdr);border-radius:10px;padding:18px;margin-bottom:14px;}
+.msg-card.unread{border-left:3px solid var(--acc);}
+.msg-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:10px;}
+.msg-name{font-weight:600;font-size:0.9rem;}
+.msg-email{font-size:0.76rem;color:var(--mut);}
+.msg-subj{font-size:0.82rem;font-weight:600;color:var(--acc);margin-bottom:6px;}
+.msg-body{font-size:0.85rem;color:#444;line-height:1.6;}
+.msg-time{font-size:0.72rem;color:var(--mut);white-space:nowrap;}
+.udot{width:7px;height:7px;border-radius:50%;background:var(--acc);display:inline-block;margin-right:5px;flex-shrink:0;}
+
+/* MODAL */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:500;align-items:center;justify-content:center;padding:20px;}
+.modal-ov.open{display:flex;}
+.modal-box{background:white;border-radius:14px;padding:30px;max-width:640px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,0.2);}
+.modal-title{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:20px;}
+.form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.full{grid-column:1/-1;}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--txt);color:white;padding:12px 20px;border-radius:9px;font-size:0.875rem;font-weight:500;z-index:9999;transform:translateY(120px);opacity:0;transition:all 0.3s;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{background:var(--grn);}
+.toast.err{background:var(--red);}
+
+/* LOGIN PAGE */
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e293b,#0f172a);}
+.login-box{background:white;border-radius:16px;padding:48px 40px;width:100%;max-width:400px;box-shadow:0 30px 60px rgba(0,0,0,0.3);}
+.login-logo{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:4px;}
+.login-logo span{color:var(--acc);}
+.login-sub{color:var(--mut);font-size:0.82rem;margin-bottom:32px;}
+.lg-err{background:#fef2f2;border:1px solid #fecaca;color:var(--red);padding:10px 14px;border-radius:7px;font-size:0.83rem;margin-bottom:14px;display:none;}
+
+/* FOOTER */
+.footer{padding:22px 5%;border-top:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.footer p{font-size:0.82rem;color:var(--mut);}
+.footer a{color:var(--acc);text-decoration:none;font-size:0.82rem;margin:0 2px;cursor:pointer;}
+
+/* FILTER */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px;}
+.fbtn{padding:6px 16px;border-radius:20px;border:1.5px solid var(--bdr);background:white;color:var(--mut);font-size:0.8rem;font-weight:500;cursor:pointer;transition:all 0.2s;}
+.fbtn.active,.fbtn:hover{border-color:var(--acc);color:var(--acc);background:var(--acl);}
+
+/* EDIT ABOUT INLINE */
+.about-edit-form{background:#f8fafc;border:2px dashed #cbd5e1;border-radius:12px;padding:24px;margin-top:20px;}
+
+@media(max-width:768px){
+  .nav-links .hide-mob{display:none;}
+  .about-grid{grid-template-columns:1fr;gap:28px;}
+  .form-row{grid-template-columns:1fr;}
+  .form-grid-2{grid-template-columns:1fr;}
+}
+</style>
 </head>
 <body>
+
+<!-- NAVBAR -->
 <nav class="navbar">
-  <a href="index.html" class="logo">TechAI<span>Hub</span></a>
+  <span class="logo" onclick="showPage('home')">TechAI<span>Hub</span></span>
   <ul class="nav-links">
-    <li><a href="index.html" class="active">Home</a></li>
-    <li><a href="blog.html">Blog</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="contact.html">Contact</a></li>
+    <li><a onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
+    <li><a onclick="showPage('blog')" id="nav-blog" class="hide-mob">Blog</a></li>
+    <li><a onclick="showPage('about')" id="nav-about" class="hide-mob">About</a></li>
+    <li><a onclick="showPage('contact')" id="nav-contact" class="hide-mob">Contact</a></li>
+    <li id="adminNavItems" style="display:none">
+      <a onclick="showPage('admin')" id="nav-admin">Admin Panel</a>
+    </li>
+    <li id="loginNavBtn">
+      <a onclick="showPage('login')" class="btn-admin-login" id="nav-login">🔐 Admin</a>
+    </li>
+    <li id="logoutNavBtn" style="display:none">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="admin-indicator">⚡ Admin Mode</span>
+        <a onclick="doLogout()" class="btn-logout">Logout</a>
+      </div>
+    </li>
   </ul>
 </nav>
 
-<section class="hero">
-  <div class="hero-tag">🚀 AI & Tech for Students</div>
-  <h1>Learn AI.<br>Build Projects.<br><em>Stay Ahead.</em></h1>
-  <p>Tutorials, tool reviews, and real insights on Artificial Intelligence & Technology — written by a student, for students.</p>
-  <div class="hero-btns">
-    <a href="blog.html" class="btn-primary">Read the Blog →</a>
-    <a href="about.html" class="btn-secondary">About Me</a>
-  </div>
-  <div class="hero-stats">
-    <div class="stat"><div class="stat-num" id="postCount">0</div><div class="stat-lbl">Articles Published</div></div>
-    <div class="stat"><div class="stat-num">100%</div><div class="stat-lbl">Free Content</div></div>
-    <div class="stat"><div class="stat-num">AI</div><div class="stat-lbl">Focused Niche</div></div>
-  </div>
-</section>
+<!-- ==================== HOME PAGE ==================== -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-tag">🚀 AI & Tech for Students</div>
+    <h1>Learn AI.<br>Build Projects.<br><em>Stay Ahead.</em></h1>
+    <p>Tutorials, tool reviews, and real insights on Artificial Intelligence & Technology — written by a student, for students.</p>
+    <div class="hero-btns">
+      <button class="btn-p" onclick="showPage('blog')">Read the Blog →</button>
+      <button class="btn-s" onclick="showPage('about')">About Me</button>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num" id="homePostCount">0</div><div class="stat-lbl">Articles Published</div></div>
+      <div><div class="stat-num">100%</div><div class="stat-lbl">Free Content</div></div>
+      <div><div class="stat-num">AI</div><div class="stat-lbl">Focused Niche</div></div>
+    </div>
+  </section>
 
-<section class="home-section surface">
-  <div class="container">
-    <div class="sec-label">Latest Posts</div>
-    <div class="sec-title">From the Blog</div>
-    <p class="sec-sub">Practical guides and insights on AI & Technology</p>
-    <div class="blog-grid" id="homePosts"></div>
-    <div style="text-align:center;margin-top:36px">
-      <a href="blog.html" class="btn-secondary">View All Articles →</a>
+  <div class="section sur-sec">
+    <div class="con">
+      <div class="s-label">Latest Posts</div>
+      <div class="s-title">From the Blog</div>
+      <p class="s-sub">Practical guides and insights on AI & Technology</p>
+      <div class="blog-grid" id="homeBlogGrid"></div>
+      <div style="text-align:center;margin-top:32px">
+        <button class="btn-s" onclick="showPage('blog')">View All Articles →</button>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
+<!-- ==================== BLOG PAGE ==================== -->
+<div id="page-blog" class="page">
+  <!-- Blog List -->
+  <div id="blogListView">
+    <div class="section con" style="padding:50px 5%">
+      <div class="s-label">All Posts</div>
+      <div class="s-title">The Blog</div>
+      <p class="s-sub">Everything about AI, Tech, and Student Life</p>
+      <!-- Admin: Add Post Button -->
+      <div id="adminAddPostBtn" style="display:none;margin-bottom:20px">
+        <button class="btn-p" onclick="openWriteModal()">✍️ Write New Post</button>
+      </div>
+      <div class="filter-bar" id="filterBar"></div>
+      <div class="blog-grid" id="blogGrid"></div>
+      <div id="blogEmpty" class="empty-msg" style="display:none">No posts yet. Check back soon!</div>
+    </div>
+  </div>
+  <!-- Single Post View -->
+  <div id="postView" style="display:none">
+    <div class="post-wrap">
+      <button class="back-btn" onclick="closePost()">← Back to Blog</button>
+      <div id="adminPostActions" style="display:none;margin-bottom:20px;display:flex;gap:8px"></div>
+      <div id="postContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ABOUT PAGE ==================== -->
+<div id="page-about" class="page">
+  <div class="about-wrap">
+    <div class="s-label">About Me</div>
+    <div class="about-grid">
+      <div>
+        <h2 class="about-h" id="aTagline"></h2>
+        <p class="about-bio" id="aBio1"></p>
+        <p class="about-bio" id="aBio2"></p>
+        <div class="skills-wrap" id="aSkills"></div>
+      </div>
+      <div class="tl-card">
+        <h3>My Journey</h3>
+        <div id="aTimeline"></div>
+      </div>
+    </div>
+    <!-- Admin Edit About Section -->
+    <div id="adminAboutEdit" style="display:none;margin-top:32px">
+      <div class="admin-section">
+        <div class="admin-section-title">⚙️ Admin — Edit About Section</div>
+        <div class="fg"><label>Tagline / Role</label><input type="text" id="eaTagline"></div>
+        <div class="fg"><label>Bio Paragraph 1</label><textarea id="eaBio1" style="min-height:80px"></textarea></div>
+        <div class="fg"><label>Bio Paragraph 2</label><textarea id="eaBio2" style="min-height:80px"></textarea></div>
+        <div class="fg"><label>Skills (one per line)</label><textarea id="eaSkills" style="min-height:90px" placeholder="Python&#10;Machine Learning&#10;HTML & CSS"></textarea></div>
+        <div class="fg"><label>Timeline (Title | Description — one per line)</label><textarea id="eaTimeline" style="min-height:100px" placeholder="Started Python | Learned basics&#10;Launched Site | Built from scratch"></textarea></div>
+        <div class="form-actions">
+          <button class="btn-sm b-blue" onclick="saveAboutData()">✓ Save About Page</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==================== CONTACT PAGE ==================== -->
+<div id="page-contact" class="page">
+  <div class="contact-wrap">
+    <div class="s-label">Get in Touch</div>
+    <div class="s-title">Contact Me</div>
+    <p class="s-sub" style="margin-bottom:28px">Have a question, collab idea, or want to say hi?</p>
+    <div class="form-row">
+      <div class="fg"><label>Name *</label><input type="text" id="cName" placeholder="Your name"></div>
+      <div class="fg"><label>Email *</label><input type="email" id="cEmail" placeholder="your@email.com"></div>
+    </div>
+    <div class="fg"><label>Subject</label><input type="text" id="cSubject" placeholder="Collab / Question / Feedback"></div>
+    <div class="fg"><label>Message *</label><textarea id="cMsg" placeholder="Write your message here..."></textarea></div>
+    <button class="btn-p" style="width:100%" onclick="sendMsg()">Send Message →</button>
+    <div class="success-box" id="contactSuccess">✅ Message sent! I'll reply soon.</div>
+    <div class="soc-row">
+      <a href="https://instagram.com" target="_blank" class="soc-btn">📸 Instagram</a>
+      <a href="https://twitter.com" target="_blank" class="soc-btn">🐦 Twitter/X</a>
+      <a href="https://linkedin.com" target="_blank" class="soc-btn">💼 LinkedIn</a>
+      <a href="https://github.com/techAIhub" target="_blank" class="soc-btn">🐙 GitHub</a>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== LOGIN PAGE ==================== -->
+<div id="page-login" class="page" style="min-height:100vh;display:none">
+  <div class="login-page">
+    <div class="login-box">
+      <div class="login-logo">TechAI<span>Hub</span></div>
+      <div class="login-sub">Admin access only — authorised users</div>
+      <div class="lg-err" id="lgErr">❌ Incorrect username or password.</div>
+      <div class="fg"><label>Username</label><input type="text" id="lgUser" placeholder="Enter username" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div class="fg"><label>Password</label><input type="password" id="lgPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn-p" style="width:100%;margin-top:6px" onclick="doLogin()">Sign In →</button>
+      <p style="text-align:center;margin-top:16px;font-size:0.78rem;color:var(--mut)"><span style="cursor:pointer;color:var(--acc)" onclick="showPage('home')">← Back to website</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ADMIN PANEL PAGE ==================== -->
+<div id="page-admin" class="page">
+  <div style="padding:32px 5%;max-width:1100px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:12px">
+      <div>
+        <h1 style="font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700">Admin Dashboard</h1>
+        <p style="color:var(--mut);font-size:0.85rem;margin-top:4px">Welcome back, Aman 👋</p>
+      </div>
+      <button class="btn-sm b-out" onclick="showPage('home')">← View Website</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="dash-stats">
+      <div class="dstat"><div class="dstat-icon">📝</div><div class="dstat-label">Total Posts</div><div class="dstat-num c-blue" id="dstPosts">0</div></div>
+      <div class="dstat"><div class="dstat-icon">💬</div><div class="dstat-label">Messages</div><div class="dstat-num c-green" id="dstMsgs">0</div></div>
+      <div class="dstat"><div class="dstat-icon">🔔</div><div class="dstat-label">Unread</div><div class="dstat-num c-orange" id="dstUnread">0</div></div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card">
+      <div class="card-head"><div class="card-title">⚡ Quick Actions</div></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn-sm b-blue" onclick="openWriteModal()">✍️ Write New Post</button>
+        <button class="btn-sm b-out" onclick="showPage('blog')">📖 View Blog</button>
+        <button class="btn-sm b-out" onclick="loadAboutForm();document.getElementById('adminAboutEdit').style.display='block';showPage('about')">👤 Edit About</button>
+      </div>
+    </div>
+
+    <!-- Manage Posts -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">📝 Manage Blog Posts</div>
+        <button class="btn-sm b-blue" onclick="openWriteModal()">+ New Post</button>
+      </div>
+      <div class="tbl-wrap">
+        <table><thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Actions</th></tr></thead>
+        <tbody id="adminPostsTbody"></tbody></table>
+      </div>
+      <div id="adminPostsEmpty" class="empty-msg" style="display:none">No posts yet. Write your first post!</div>
+    </div>
+
+    <!-- Messages -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">💬 Contact Messages</div>
+        <button class="btn-sm b-out" onclick="markAllRead()">✓ Mark All Read</button>
+      </div>
+      <div style="font-size:0.82rem;color:var(--mut);margin-bottom:14px" id="msgCountTxt"></div>
+      <div id="adminMsgsList"></div>
+      <div id="adminMsgsEmpty" class="empty-msg" style="display:none">No messages yet.</div>
+    </div>
+
+    <!-- Edit About in Admin Panel Too -->
+    <div class="card">
+      <div class="card-head"><div class="card-title">👤 Edit About Section</div></div>
+      <div class="fg"><label>Tagline</label><input type="text" id="eaTagline2"></div>
+      <div class="form-grid-2">
+        <div class="fg"><label>Bio Paragraph 1</label><textarea id="eaBio1_2" style="min-height:80px"></textarea></div>
+        <div class="fg"><label>Bio Paragraph 2</label><textarea id="eaBio2_2" style="min-height:80px"></textarea></div>
+      </div>
+      <div class="form-grid-2">
+        <div class="fg"><label>Skills (one per line)</label><textarea id="eaSkills2" style="min-height:90px"></textarea></div>
+        <div class="fg"><label>Timeline (Title | Description)</label><textarea id="eaTimeline2" style="min-height:90px"></textarea></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-sm b-blue" onclick="saveAboutFromAdmin()">✓ Save About Page</button>
+      </div>
+    </div>
+
+    <!-- Change Password -->
+    <div class="card" style="max-width:440px">
+      <div class="card-head"><div class="card-title">🔐 Change Password</div></div>
+      <div class="fg"><label>Current Password</label><input type="password" id="sOld" placeholder="Current password"></div>
+      <div class="fg"><label>New Password</label><input type="password" id="sNew" placeholder="New password"></div>
+      <div class="fg"><label>Confirm</label><input type="password" id="sConf" placeholder="Confirm new password"></div>
+      <button class="btn-sm b-blue" onclick="changePass()">Update Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
 <footer class="footer">
   <p>© 2025 TechAI Hub. Built with ❤️</p>
-  <p><a href="blog.html">Blog</a> · <a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="admin.html">Admin</a></p>
+  <p>
+    <a onclick="showPage('home')">Home</a> ·
+    <a onclick="showPage('blog')">Blog</a> ·
+    <a onclick="showPage('about')">About</a> ·
+    <a onclick="showPage('contact')">Contact</a>
+  </p>
 </footer>
 
-<script src="_nav.js"></script>
+<!-- ==================== WRITE/EDIT POST MODAL ==================== -->
+<div class="modal-ov" id="writeModal" onclick="if(event.target===this)closeWriteModal()">
+  <div class="modal-box">
+    <div class="modal-title" id="writeModalTitle">✍️ Write New Post</div>
+    <div class="form-grid-2">
+      <div class="fg full"><label>Post Title *</label><input type="text" id="pTitle" placeholder="e.g. 10 Best AI Tools for Students in 2025"></div>
+      <div class="fg">
+        <label>Category *</label>
+        <select id="pCat">
+          <option value="">Select category...</option>
+          <option>AI Tools</option><option>Tutorial</option><option>Comparison</option>
+          <option>Career</option><option>Python</option><option>Machine Learning</option>
+          <option>News</option><option>Free Tools</option>
+        </select>
+      </div>
+      <div class="fg"><label>Read Time</label><input type="text" id="pTime" placeholder="e.g. 5 min read"></div>
+      <div class="fg full"><label>Short Description *</label><input type="text" id="pDesc" placeholder="Brief summary shown on blog cards"></div>
+      <div class="fg full">
+        <label>Full Content * &nbsp;<small style="color:var(--mut);font-weight:400">Use ## for headings, **bold**, - for bullet points, 💡 for tip boxes</small></label>
+        <textarea id="pContent" style="min-height:280px" placeholder="## Introduction&#10;Start writing here...&#10;&#10;## Section Heading&#10;More content...&#10;&#10;- Bullet point one&#10;- Bullet point two&#10;&#10;💡 This is a tip box!"></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-sm b-out" onclick="closeWriteModal()">Cancel</button>
+      <button class="btn-sm b-blue" id="savePostBtn" onclick="savePost()">🚀 Publish Post</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ==================== JAVASCRIPT ==================== -->
 <script>
-  const posts = getPosts();
-  document.getElementById('postCount').textContent = posts.length || '0';
-  const latest = [...posts].reverse().slice(0, 3);
-  const grid = document.getElementById('homePosts');
-  if (latest.length === 0) {
-    grid.innerHTML = '<div class="empty-cards"><p>No posts yet. Check back soon!</p></div>';
+// ---- STORAGE KEYS ----
+const K_POSTS   = 'taih_posts';
+const K_MSGS    = 'taih_msgs';
+const K_ABOUT   = 'taih_about';
+const K_SESS    = 'taih_logged_in';   // localStorage so persists on refresh
+const K_PASS    = 'taih_pass';
+
+// SHA-256 hashes — plain text NOT stored here
+const U_HASH = 'c130a2f36f773e437ec591d1d3d2608e82471f6a1458276ffc116738ee0a571a';
+const P_HASH = 'b35933ebbb09ef47b572e21feab273dee64312fd860572b90a9dbff1344ccad9';
+
+// ---- STORAGE HELPERS ----
+const getPosts  = () => { try{return JSON.parse(localStorage.getItem(K_POSTS))||[];}catch{return[];} };
+const savePosts = d => localStorage.setItem(K_POSTS, JSON.stringify(d));
+const getMsgs   = () => { try{return JSON.parse(localStorage.getItem(K_MSGS))||[];}catch{return[];} };
+const saveMsgs  = d => localStorage.setItem(K_MSGS, JSON.stringify(d));
+const getAbout  = () => JSON.parse(localStorage.getItem(K_ABOUT)||'null') || {
+  tagline:'Student. Builder. AI Enthusiast.',
+  bio1:"Hey! I'm a BTech CSE (AI & ML) student passionate about Artificial Intelligence and Technology. I created TechAI Hub to document my learning journey and help fellow students.",
+  bio2:"I believe the best way to learn is to teach. Every article I write is something I've personally explored, tested, or built.",
+  skills:['Python','Machine Learning','HTML & CSS','JavaScript','Video Editing','AI Tools'],
+  timeline:[
+    {title:'Started Learning Python', sub:'Learned basics and built first projects'},
+    {title:'Launched TechAI Hub',     sub:'Built and deployed this website from scratch'},
+    {title:'BTech CSE AI & ML',       sub:'Starting college — Aug/Sep 2025'},
+    {title:"What's Next",             sub:'Building AI projects, growing this blog'}
+  ]
+};
+const saveAbout = d => localStorage.setItem(K_ABOUT, JSON.stringify(d));
+const isAdmin   = () => localStorage.getItem(K_SESS) === '1';
+
+// ---- HASH UTIL ----
+async function hashStr(s) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+// ---- AUTH ----
+async function doLogin() {
+  const u = document.getElementById('lgUser').value.trim();
+  const p = document.getElementById('lgPass').value.trim();
+  const [uh, ph] = await Promise.all([hashStr(u), hashStr(p)]);
+  const storedP = localStorage.getItem(K_PASS) || P_HASH;
+  if (uh === U_HASH && ph === storedP) {
+    localStorage.setItem(K_SESS, '1');
+    document.getElementById('lgErr').style.display = 'none';
+    applyAdminUI();
+    showPage('admin');
+    toast('✅ Logged in successfully!','ok');
   } else {
-    grid.innerHTML = latest.map(p => `
-      <a href="blog.html?id=${p.id}" class="blog-card">
-        <span class="blog-tag">${p.category}</span>
-        <h3>${p.title}</h3>
-        <p>${p.desc}</p>
-        <div class="blog-meta">${p.date} · ${p.readTime}</div>
-        <div class="read-more">Read article →</div>
-      </a>`).join('');
+    document.getElementById('lgErr').style.display = 'block';
   }
+}
+
+function doLogout() {
+  localStorage.removeItem(K_SESS);
+  applyAdminUI();
+  showPage('home');
+  toast('Logged out.','');
+}
+
+function applyAdminUI() {
+  const admin = isAdmin();
+  document.getElementById('loginNavBtn').style.display    = admin ? 'none' : 'list-item';
+  document.getElementById('logoutNavBtn').style.display   = admin ? 'list-item' : 'none';
+  document.getElementById('adminNavItems').style.display  = admin ? 'list-item' : 'none';
+  document.getElementById('adminAddPostBtn').style.display = admin ? 'block' : 'none';
+  document.getElementById('adminAboutEdit').style.display = admin ? 'block' : 'none';
+  if (admin) loadAboutForm();
+}
+
+// ---- PAGE NAVIGATION ----
+const pageTitles = {home:'Home',blog:'Blog',about:'About',contact:'Contact',login:'Admin Login',admin:'Admin Panel'};
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display=''; });
+  const pg = document.getElementById('page-'+name);
+  if (!pg) return;
+  pg.classList.add('active');
+  if (name === 'login') pg.style.display = 'block';
+  document.querySelectorAll('.nav-links a[id^="nav-"]').forEach(a => a.classList.remove('active'));
+  const na = document.getElementById('nav-'+name);
+  if (na) na.classList.add('active');
+  if (name === 'home')    renderHome();
+  if (name === 'blog')    { document.getElementById('blogListView').style.display='block'; document.getElementById('postView').style.display='none'; renderBlog('All'); }
+  if (name === 'about')   { renderAbout(); if(isAdmin()) loadAboutForm(); }
+  if (name === 'admin')   { if(!isAdmin()){showPage('login');return;} renderAdmin(); }
+  window.scrollTo(0,0);
+}
+
+// ---- HOME ----
+function renderHome() {
+  const posts = [...getPosts()].reverse().slice(0,3);
+  document.getElementById('homePostCount').textContent = getPosts().length;
+  const grid = document.getElementById('homeBlogGrid');
+  if (posts.length===0) { grid.innerHTML = '<div class="empty-msg" style="grid-column:1/-1">No posts yet. Check back soon!</div>'; return; }
+  grid.innerHTML = posts.map(p => `
+    <div class="blog-card" onclick="openPost(${p.id})">
+      <span class="blog-tag">${p.category}</span>
+      <h3>${p.title}</h3>
+      <p>${p.desc}</p>
+      <div class="blog-meta">${p.date} · ${p.readTime}</div>
+      <div class="read-more">Read article →</div>
+    </div>`).join('');
+}
+
+// ---- BLOG ----
+function renderBlog(filter) {
+  const posts = getPosts();
+  const cats = ['All', ...new Set(posts.map(p=>p.category))];
+  document.getElementById('filterBar').innerHTML = cats.map(c =>
+    `<button class="fbtn ${c===filter?'active':''}" onclick="renderBlog('${c}')">${c}</button>`
+  ).join('');
+  const filtered = filter==='All' ? posts : posts.filter(p=>p.category===filter);
+  const grid = document.getElementById('blogGrid');
+  const empty = document.getElementById('blogEmpty');
+  if (filtered.length===0) { grid.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  grid.innerHTML = [...filtered].reverse().map(p => `
+    <div class="blog-card" onclick="openPost(${p.id})">
+      <span class="blog-tag">${p.category}</span>
+      <h3>${p.title}</h3>
+      <p>${p.desc}</p>
+      <div class="blog-meta">${p.date} · ${p.readTime}</div>
+      ${isAdmin() ? `<div class="admin-card-actions" onclick="event.stopPropagation()">
+        <button class="btn-sm b-out" onclick="openEditModal(${p.id})">✏️</button>
+        <button class="btn-sm b-red" onclick="delPost(${p.id})">🗑️</button>
+      </div>` : ''}
+      <div class="read-more">Read article →</div>
+    </div>`).join('');
+}
+
+function openPost(id) {
+  const p = getPosts().find(x=>x.id===id);
+  if (!p) return;
+  document.getElementById('blogListView').style.display = 'none';
+  document.getElementById('postView').style.display = 'block';
+  const ap = document.getElementById('adminPostActions');
+  if (isAdmin()) {
+    ap.style.display = 'flex';
+    ap.innerHTML = `<button class="btn-sm b-out" onclick="openEditModal(${id})">✏️ Edit Post</button><button class="btn-sm b-red" onclick="delPost(${id});closePost()">🗑️ Delete Post</button>`;
+  } else { ap.style.display='none'; }
+  document.getElementById('postContent').innerHTML = `
+    <span class="post-tag">${p.category}</span>
+    <h1 class="post-title">${p.title}</h1>
+    <div class="post-meta">${p.date} · ${p.readTime}</div>
+    <div class="post-body">${formatContent(p.content)}</div>`;
+  window.scrollTo(0,0);
+}
+
+function closePost() {
+  document.getElementById('blogListView').style.display='block';
+  document.getElementById('postView').style.display='none';
+}
+
+function formatContent(t) {
+  return t
+    .replace(/^## (.+)$/gm,'<h2>$1</h2>')
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/^- (.+)$/gm,'<li>$1</li>')
+    .replace(/(<li>[\s\S]*?<\/li>\n?)+/g,m=>`<ul>${m}</ul>`)
+    .replace(/💡 (.+)/g,'<div class="tip-box"><p>💡 $1</p></div>')
+    .split('\n\n').map(p=>p.trim().startsWith('<')?p:`<p>${p.trim()}</p>`).filter(p=>p!=='<p></p>').join('');
+}
+
+// ---- POST CRUD ----
+let editingId = null;
+
+function openWriteModal() {
+  editingId = null;
+  ['pTitle','pCat','pDesc','pContent','pTime'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('writeModalTitle').textContent = '✍️ Write New Post';
+  document.getElementById('savePostBtn').textContent = '🚀 Publish Post';
+  document.getElementById('writeModal').classList.add('open');
+}
+
+function openEditModal(id) {
+  const p = getPosts().find(x=>x.id===id);
+  if (!p) return;
+  editingId = id;
+  document.getElementById('pTitle').value   = p.title;
+  document.getElementById('pCat').value     = p.category;
+  document.getElementById('pDesc').value    = p.desc;
+  document.getElementById('pContent').value = p.content;
+  document.getElementById('pTime').value    = p.readTime;
+  document.getElementById('writeModalTitle').textContent = '✏️ Edit Post';
+  document.getElementById('savePostBtn').textContent = '✓ Save Changes';
+  document.getElementById('writeModal').classList.add('open');
+}
+
+function closeWriteModal() { document.getElementById('writeModal').classList.remove('open'); editingId=null; }
+
+function savePost() {
+  const title = document.getElementById('pTitle').value.trim();
+  const cat   = document.getElementById('pCat').value;
+  const desc  = document.getElementById('pDesc').value.trim();
+  const cont  = document.getElementById('pContent').value.trim();
+  const time  = document.getElementById('pTime').value.trim() || '3 min read';
+  if (!title||!cat||!desc||!cont) { toast('Please fill in all required fields!','err'); return; }
+  const posts = getPosts();
+  if (editingId) {
+    const idx = posts.findIndex(p=>p.id===editingId);
+    if (idx>-1) { posts[idx]={...posts[idx],title,category:cat,desc,content:cont,readTime:time}; }
+    savePosts(posts);
+    toast('✅ Post updated!','ok');
+  } else {
+    posts.push({id:Date.now(),title,category:cat,desc,content:cont,readTime:time,
+      date:new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'})});
+    savePosts(posts);
+    toast('✅ Post published!','ok');
+  }
+  closeWriteModal();
+  renderHome();
+  renderBlog('All');
+  renderAdmin();
+}
+
+function delPost(id) {
+  if (!confirm('Delete this post permanently?')) return;
+  savePosts(getPosts().filter(p=>p.id!==id));
+  renderHome(); renderBlog('All'); renderAdmin();
+  toast('Post deleted.','err');
+}
+
+// ---- ABOUT ----
+function renderAbout() {
+  const a = getAbout();
+  document.getElementById('aTagline').textContent = a.tagline;
+  document.getElementById('aBio1').textContent    = a.bio1;
+  document.getElementById('aBio2').textContent    = a.bio2;
+  document.getElementById('aSkills').innerHTML    = a.skills.map(s=>`<span class="skill-tag">${s}</span>`).join('');
+  document.getElementById('aTimeline').innerHTML  = a.timeline.map(t=>`
+    <div class="tl-item"><div class="tl-dot"></div>
+    <div><div class="tl-title">${t.title}</div><div class="tl-sub">${t.sub}</div></div></div>`).join('');
+}
+
+function loadAboutForm() {
+  const a = getAbout();
+  ['eaTagline','eaTagline2'].forEach(id=>{ const e=document.getElementById(id); if(e)e.value=a.tagline; });
+  ['eaBio1','eaBio1_2'].forEach(id=>{ const e=document.getElementById(id); if(e)e.value=a.bio1; });
+  ['eaBio2','eaBio2_2'].forEach(id=>{ const e=document.getElementById(id); if(e)e.value=a.bio2; });
+  const skillsStr = a.skills.join('\n');
+  ['eaSkills','eaSkills2'].forEach(id=>{ const e=document.getElementById(id); if(e)e.value=skillsStr; });
+  const tlStr = a.timeline.map(t=>`${t.title} | ${t.sub}`).join('\n');
+  ['eaTimeline','eaTimeline2'].forEach(id=>{ const e=document.getElementById(id); if(e)e.value=tlStr; });
+}
+
+function doSaveAbout(suffix) {
+  const s = suffix||'';
+  const tagline  = document.getElementById('eaTagline'+s).value.trim();
+  const bio1     = document.getElementById('eaBio1'+s).value.trim();
+  const bio2     = document.getElementById('eaBio2'+s).value.trim();
+  const skills   = document.getElementById('eaSkills'+s).value.split('\n').map(x=>x.trim()).filter(Boolean);
+  const tlLines  = document.getElementById('eaTimeline'+s).value.split('\n').map(x=>x.trim()).filter(Boolean);
+  const timeline = tlLines.map(l=>{ const[t,...r]=l.split('|'); return{title:t.trim(),sub:r.join('|').trim()}; });
+  saveAbout({tagline,bio1,bio2,skills,timeline});
+  renderAbout();
+  loadAboutForm();
+  toast('✅ About page saved!','ok');
+}
+
+function saveAboutData()      { doSaveAbout(''); }
+function saveAboutFromAdmin() { doSaveAbout('2'); }
+
+
+
+
+// ---- CONTACT ----
+function sendMsg() {
+  const name    = document.getElementById('cName').value.trim();
+  const email   = document.getElementById('cEmail').value.trim();
+  const subject = document.getElementById('cSubject').value.trim();
+  const message = document.getElementById('cMsg').value.trim();
+  if (!name||!email||!message) { toast('Please fill Name, Email and Message.','err'); return; }
+  const msgs = getMsgs();
+  msgs.push({id:Date.now(),name,email,subject,message,read:false,
+    time:new Date().toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})});
+  saveMsgs(msgs);
+  document.getElementById('cName').value=document.getElementById('cEmail').value=
+  document.getElementById('cSubject').value=document.getElementById('cMsg').value='';
+  const sb = document.getElementById('contactSuccess');
+  sb.style.display='block';
+  setTimeout(()=>sb.style.display='none',4000);
+  toast('Message sent!','ok');
+}
+
+// ---- ADMIN PANEL ----
+function renderAdmin() {
+  const posts  = getPosts();
+  const msgs   = getMsgs();
+  const unread = msgs.filter(m=>!m.read).length;
+  document.getElementById('dstPosts').textContent  = posts.length;
+  document.getElementById('dstMsgs').textContent   = msgs.length;
+  document.getElementById('dstUnread').textContent = unread;
+  // Posts table
+  const tbody = document.getElementById('adminPostsTbody');
+  const empty = document.getElementById('adminPostsEmpty');
+  if (posts.length===0) { tbody.innerHTML=''; empty.style.display='block'; }
+  else {
+    empty.style.display='none';
+    tbody.innerHTML = [...posts].reverse().map(p=>`
+      <tr>
+        <td><strong>${p.title}</strong><br><span style="color:var(--mut);font-size:0.76rem">${p.desc.substring(0,60)}...</span></td>
+        <td><span style="background:var(--acl);color:var(--acc);font-size:0.7rem;font-weight:700;padding:2px 8px;border-radius:4px">${p.category}</span></td>
+        <td style="color:var(--mut);font-size:0.78rem;white-space:nowrap">${p.date}</td>
+        <td><div style="display:flex;gap:6px">
+          <button class="btn-sm b-out" onclick="openEditModal(${p.id})">✏️ Edit</button>
+          <button class="btn-sm b-red" onclick="delPost(${p.id})">🗑️ Delete</button>
+        </div></td>
+      </tr>`).join('');
+  }
+  // Messages
+  const mlist = document.getElementById('adminMsgsList');
+  const mempty = document.getElementById('adminMsgsEmpty');
+  const unreadCount = msgs.filter(m=>!m.read).length;
+  document.getElementById('msgCountTxt').textContent = `${msgs.length} total · ${unreadCount} unread`;
+  if (msgs.length===0) { mlist.innerHTML=''; mempty.style.display='block'; }
+  else {
+    mempty.style.display='none';
+    mlist.innerHTML = [...msgs].reverse().map(m=>`
+      <div class="msg-card ${m.read?'':'unread'}">
+        <div class="msg-head">
+          <div>
+            <div class="msg-name">${!m.read?'<span class="udot"></span>':''}${m.name}</div>
+            <div class="msg-email">${m.email}</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            <span class="msg-time">${m.time}</span>
+            ${!m.read?`<button class="btn-sm b-grn" onclick="markMsgRead(${m.id})">✓ Read</button>`:''}
+            <button class="btn-sm b-red" onclick="delMsg(${m.id})">🗑️</button>
+          </div>
+        </div>
+        <div class="msg-subj">${m.subject||'(No subject)'}</div>
+        <div class="msg-body">${m.message}</div>
+      </div>`).join('');
+  }
+  loadAboutForm();
+}
+
+function markMsgRead(id) { const m=getMsgs(); const x=m.find(x=>x.id===id); if(x)x.read=true; saveMsgs(m); renderAdmin(); }
+function markAllRead() { saveMsgs(getMsgs().map(m=>({...m,read:true}))); renderAdmin(); toast('All marked as read.','ok'); }
+function delMsg(id) { if(!confirm('Delete this message?'))return; saveMsgs(getMsgs().filter(m=>m.id!==id)); renderAdmin(); toast('Deleted.','err'); }
+
+// ---- CHANGE PASSWORD ----
+async function changePass() {
+  const old  = document.getElementById('sOld').value;
+  const nw   = document.getElementById('sNew').value;
+  const conf = document.getElementById('sConf').value;
+  const stored = localStorage.getItem(K_PASS)||P_HASH;
+  if (await hashStr(old) !== stored) { toast('Current password is wrong!','err'); return; }
+  if (nw !== conf)   { toast("Passwords don't match!",'err'); return; }
+  if (nw.length < 6) { toast('Password must be 6+ characters!','err'); return; }
+  localStorage.setItem(K_PASS, await hashStr(nw));
+  document.getElementById('sOld').value=document.getElementById('sNew').value=document.getElementById('sConf').value='';
+  toast('✅ Password changed!','ok');
+}
+
+// ---- TOAST ----
+function toast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast'+(type?' '+type:'');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+// ---- INIT ----
+applyAdminUI();
+renderHome();
 </script>
 </body>
 </html>
